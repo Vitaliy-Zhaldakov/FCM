@@ -8,21 +8,17 @@ def function(x):
 
 N = 200
 # Построение графика и вычисление интеграла
-def plotttingTriangle(N):
+def plotting(N):
     b = 3.5
     a = 5
-    e = 0.01
-
-    # Массивы случайных точек
-    # xPoints = [random.uniform(0, a) for i in range(N)]
-    # yPoints = [random.uniform(0, b) for i in range(N)]
+    epsilon = 0.01
 
     xPoints = np.random.uniform(0, a, N)
-    while (xPoints.mean() - a / 2 >= e) or (xPoints.var() - a * a / 12 >= e):
+    while (xPoints.mean() - a / 2 >= epsilon) or (xPoints.var() - a * a / 12 >= epsilon):
         xPoints = np.random.uniform(0, a, N)
 
     yPoints = np.random.uniform(0, b, N)
-    while (yPoints.mean() - b / 2 >= e) or (yPoints.var() - b * b / 12 >= e):
+    while (yPoints.mean() - b / 2 >= epsilon) or (yPoints.var() - b * b / 12 >= epsilon):
         yPoints = np.random.uniform(0, b, N)
 
     # Массив x-ов
@@ -68,7 +64,8 @@ def plotttingTriangle(N):
               facecolor='oldlace',  # Цвет области
               edgecolor='blue',  # Цвет крайней линии
               title=f'Всего генерируемых точек: {N} \n'
-                    f'Приближённо интеграл равен: {S}',
+                    f'Вручную интеграл: 15.758 \n'
+                    f'Интеграл по Монте-Карло: {S}',
               title_fontsize='12',  # Размер шрифта
               loc="lower left"
               )
@@ -77,4 +74,4 @@ def plotttingTriangle(N):
 
     plt.show()
 
-plotttingTriangle(N)
+plotting(N)
