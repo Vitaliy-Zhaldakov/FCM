@@ -12,7 +12,7 @@ def function(x, n):
 N = 200
 n = 2
 # Построение треугольника и вычисление его площади
-def plotttingTriangle(N, n):
+def plottingTriangle(N, n):
     b = 10
     a = 20
     epsilon = 0.01
@@ -65,7 +65,8 @@ def plotttingTriangle(N, n):
               facecolor='oldlace',  # Цвет области
               edgecolor='blue',  # Цвет крайней линии
               title=f'Всего генерируемых точек: {N} \n'
-                    f'Площадь фигуры: {S}',
+                    f'Точная площадь фигуры: 100 \n'
+                    f'Площадь по Монте-Карло: {S1}',
               title_fontsize='12',  # Размер шрифта
               loc="upper right"
               )
@@ -82,4 +83,4 @@ def plotttingTriangle(N, n):
 
     plt.show()
 
-plotttingTriangle(N, n)
+plottingTriangle(N, n)
