@@ -3,8 +3,8 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-A = 13
-B = 9
+A = 17
+B = 7
 
 def po(ph, A, B):
     return math.sqrt(A * pow(np.cos(ph), 2) + B * pow(np.sin(ph), 2))
@@ -17,19 +17,18 @@ def curPh(x, y):
     elif x == 0 and y > 0:
         return np.pi / 2
     elif x == 0 and y < 0:
-        return -np.pi / 2
+        return np.pi * 3 / 2
     elif x == 0 and y == 0:
         return 0
     else:
         return "Офыбка"
 
 def plotting(A, B):
-    N = 200
-    e = 0.01
+    N = 1000
 
     fig, ax = plt.subplots()
 
-    ph = np.arange(0, 2 * np.pi, step=0.01)
+    ph = np.linspace(0, 2 * np.pi, num=300)
 
     x = np.array([])
     y = np.array([])
@@ -39,9 +38,12 @@ def plotting(A, B):
 
     ax.plot(x, y)
 
+    a = max(x)
+    b = max(y)
+
     # Генерация массивов случайных точек
-    xPoints = [random.uniform(min(x), max(x)) for i in range(N)]
-    yPoints = [random.uniform(min(x), max(x)) for i in range(N)]
+    xPoints = np.random.uniform(0, 2 * a, N) - a
+    yPoints = np.random.uniform(0, 2 * b, N) - b
 
     M = 0
     for i in range(N):
@@ -51,7 +53,7 @@ def plotting(A, B):
         else:
             plt.scatter(xPoints[i], yPoints[i], s=10, color='black')
 
-    S = M / N * (max(x) - min(x)) * (max(y) - min(y))
+    S = M / N * (a * b * 4)
     print(f'Площадь фигуры: {S}')
 
     ax.legend(fontsize=12,
@@ -59,7 +61,7 @@ def plotting(A, B):
               facecolor='oldlace',  # Цвет области
               edgecolor='blue',  # Цвет крайней линии
               title=f'Кол-во генерируемых точек: {N} \n'
-                    f'Площадь вручную: 33.557 \n'
+                    f'Площадь вручную: 37.843 \n'
                     f'Площадь по Монте-Карло: {S}',
               title_fontsize='13',  # Размер шрифта
               loc="upper left"
