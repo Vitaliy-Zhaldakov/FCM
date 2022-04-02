@@ -1,49 +1,50 @@
-# Нечётные - больше половины
-# Чётные - меньше половины
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Метод квадратов
-def methodSquares(num, iter):
-    if iter != 0:
-        squareNum = num * num
-        lengthNum = len(str(num)) / 2
-        # Список цифр
-        listDigits = list(str(squareNum))
-        if len(listDigits) % 2 != 0:
-            listDigits.insert(0, '0')
+def methodSquares(num, iter, array):
+    lengthNum = len(num)
+
+    for i in range(iter):
+        squareNum = str(pow(int(num), 2))
+
+        while len(squareNum) != lengthNum * 2:
+            squareNum = "0" + squareNum
 
         # Список средних разрядов
-        midDigits = listDigits[int(lengthNum): len(listDigits) - int(lengthNum)]
+        new = squareNum[int(lengthNum - lengthNum/2) : int(lengthNum + lengthNum/2)]
 
         # Преобразование в новое число в интервале (0; 1)
-        new = float(''.join(map(str, ['0', '.'] + midDigits)))
-        print(f"Случайное число: {new}")
-        methodSquares(int(''.join(map(str, midDigits))), iter - 1)
+        # Добавление числа в массив
+        array = np.append(array, int(new) * pow(10, -lengthNum))
+        num = new
+    return array
 
 # Метод произведений
-def methodMultiplications(core, num, iter):
-    if iter != 0:
-        print(f"Множимое: {num}")
-        lengthNum = len(str(num)) / 2
-        mult = core * num
+def methodMultiplications(core, num, iter, array):
+    lengthNum = len(num)
 
-        # Список цифр
-        listDigits = list(str(mult))
-        if len(listDigits) % 2 != 0:
-            listDigits.insert(0, '0')
+    for i in range(iter):
+        mult = str(int(num) * core)
+
+        while len(mult) != lengthNum * 2:
+            mult = "0" + mult
 
         # Список средних разрядов
-        midDigits = listDigits[int(lengthNum): len(listDigits) - int(lengthNum)]
+        new = mult[int(lengthNum - lengthNum / 2): int(lengthNum + lengthNum / 2)]
+
         # Преобразование в новое число в интервале (0; 1)
-        new = float(''.join(map(str, ['0', '.'] + midDigits)))
-        print(f"Случайное число: {new}\n")
+        array = np.append(array, int(new) * pow(10, -lengthNum))
 
         # Получение следующего множимого
-        nextNum = int(''.join(map(str, listDigits[-len(str(num)):])))
-        methodMultiplications(core, nextNum, iter - 1)
+        num = mult[-lengthNum:]
+    return array
 
 # Мультипликативный конгруэнтный метод
-def multiCongMethod(multiplier, divider, iter, num):
-    if iter != 0:
+def multiCongMethod(multiplier, divider, iter, num, array):
+    lengthNum = len(str(num))
+
+    for i in range(iter):
         # Произведение числа на множитель
         if num == 0:
             mult = multiplier * multiplier
@@ -52,18 +53,19 @@ def multiCongMethod(multiplier, divider, iter, num):
 
         # Целая часть от деления
         chastnoe = mult // divider
-        print(f'Частное: {chastnoe}')
         # Остаток - следующее число
         remainder = mult % divider
 
         # Преобразование в новое число в интервале (0; 1)
-        new = float('0.' + str(remainder))
-        print(f"Случайное число: {new}\n")
-        multiCongMethod(multiplier, divider, iter - 1, remainder)
+        array = np.append(array, remainder * pow(10, -lengthNum))
+        num = remainder
+    return array
 
 # Смешанный конгруэнтный метод
-def mixedCongMethod(multiplier, const, divider, iter, num):
-    if iter != 0:
+def mixedCongMethod(multiplier, const, divider, iter, num, array):
+    lengthNum = len(str(num))
+
+    for i in range(iter):
         # Произведение числа на множитель
         if num == 0:
             mult = multiplier * multiplier
@@ -71,14 +73,16 @@ def mixedCongMethod(multiplier, const, divider, iter, num):
             mult = multiplier * num
 
         # Следующее число последовательности
-        nextNum = (mult + const) % divider
+        nextNum = round((mult + const) % divider, 4)
 
         # Случайное число
-        new = float('0.' + str(nextNum))
-        print(f'Случайное число: {new}')
-        mixedCongMethod(multiplier, const, divider, iter - 1, nextNum)
+        new = '0' + str(nextNum)
+        array = np.append(array, new)
+        num = nextNum
+    return array
 
 def main():
+    array = np.array([])
     method = 1
     while(method):
         iter = int(input("Количество случайных чисел: "))
@@ -90,23 +94,43 @@ def main():
               "0. Выход\n"))
 
         if method == 1:
-            num = int(input("Исходное число: "))
-            methodSquares(num, iter)
+            num = input("Исходное число: ")
+            numbers = methodSquares(num, iter, array)
+            print(numbers)
+            plt.hist(numbers, bins=int(iter / 10))
+            plt.xlabel('Случайное значение')
+            plt.ylabel('Количество случайных чисел')
+            plt.show()
         elif method == 2:
             core = int(input("Ядро: "))
-            num = int(input("Множимое: "))
-            methodMultiplications(core, num, iter)
+            num = input("Множимое: ")
+            numbers = methodMultiplications(core, num, iter, array)
+            print(numbers)
+            plt.hist(numbers, bins=int(iter / 10))
+            plt.xlabel('Случайное значение')
+            plt.ylabel('Количество случайных чисел')
+            plt.show()
         elif method == 3:
             multiplier = int(input("Множитель: "))
             divider = int(input("Делитель: "))
             num = int(input("Исходное число: "))
-            multiCongMethod(multiplier, divider, iter, num)
+            numbers = multiCongMethod(multiplier, divider, iter, num, array)
+            print(numbers)
+            plt.hist(numbers, bins=int(iter / 10))
+            plt.xlabel('Случайное значение')
+            plt.ylabel('Количество случайных чисел')
+            plt.show()
         elif method == 4:
             multiplier = int(input("Множитель: "))
             divider = int(input("Делитель: "))
             const = int(input("Аддитивная константа: "))
             num = int(input("Исходное число: "))
-            mixedCongMethod(multiplier, const, divider, iter, num)
+            number = mixedCongMethod(multiplier, const, divider, iter, num, array)
+            print(numbers)
+            plt.hist(numbers, bins=int(iter / 10))
+            plt.xlabel('Случайное значение')
+            plt.ylabel('Количество случайных чисел')
+            plt.show()
         else:
             break
 
